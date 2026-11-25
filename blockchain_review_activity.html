@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* slate-50 */
+        }
+        
+        input {
+            transition: all 0.2s ease-in-out;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation -->
+    <header class="bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
+        <h1 class="text-xl font-semibold tracking-tight text-slate-900">Blockchain Review</h1>
+        <div class="flex items-center gap-6">
+            <span id="progress-text" class="text-sm font-medium text-slate-500">Exercise 1 of 3</span>
+            <div class="w-32 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                <div id="progress-bar" class="w-1/3 h-full bg-slate-400 rounded-full transition-all duration-500"></div>
+            </div>
+            <button onclick="location.reload()" class="px-4 py-2 border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-200">
+                Reset
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="flex-grow max-w-6xl mx-auto w-full px-8 py-10">
+        
+        <!-- Tabs Navigation -->
+        <nav class="flex gap-2 border-b border-slate-200 mb-10">
+            <button id="nav-tab-1" class="px-6 py-3 -mb-px text-sm font-semibold text-blue-600 border-b-2 border-blue-600 bg-blue-50/50 rounded-t-lg transition-colors">
+                1. HASHING & INTEGRITY
+            </button>
+            <button id="nav-tab-2" class="px-6 py-3 -mb-px text-sm font-medium text-slate-400 border-b-2 border-transparent cursor-not-allowed rounded-t-lg transition-colors" disabled>
+                2. KEYS <span class="ml-1 text-xs opacity-50">🔒</span>
+            </button>
+            <button id="nav-tab-3" class="px-6 py-3 -mb-px text-sm font-medium text-slate-400 border-b-2 border-transparent cursor-not-allowed rounded-t-lg transition-colors" disabled>
+                3. BLOCKS <span class="ml-1 text-xs opacity-50">🔒</span>
+            </button>
+        </nav>
+
+        <!-- Section 1: Hashing & Integrity -->
+        <div id="section-1" class="fade-in block">
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Exercise 1: Hashing & Data Integrity</h2>
+                <p class="text-slate-600">Solve the riddles to find the cipher key, decrypt the message, and verify the hash.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+                <!-- Riddles Column -->
+                <div class="lg:col-span-1 bg-white border border-slate-200 rounded-xl p-6 shadow-sm">
+                    <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Riddle & Cipher Checklist</h3>
+                    <div class="space-y-4 text-sm text-slate-600">
+                        <div>
+                            <p class="mb-1">1. I am a button on a keyboard that makes a small character grand. I am also what you do when you move your weight from one foot to the other.</p>
+                            <input type="text" id="riddle-1" class="w-full px-3 py-1.5 border border-slate-300 rounded text-slate-900 uppercase text-xs focus:outline-none focus:border-blue-500" placeholder="Answer...">
+                        </div>
+                        <div>
+                            <p class="mb-1">2. I am a short, four-letter word meaning "every single one individually." If you divide a pizza equally, you give two slices to ____.</p>
+                            <input type="text" id="riddle-2" class="w-full px-3 py-1.5 border border-slate-300 rounded text-slate-900 uppercase text-xs focus:outline-none focus:border-blue-500" placeholder="Answer...">
+                        </div>
+                        <div>
+                            <p class="mb-1">3. I can be folded, sealed, and sent in the mail. But I am also exactly what 'A', 'B', and 'C' are.</p>
+                            <input type="text" id="riddle-3" class="w-full px-3 py-1.5 border border-slate-300 rounded text-slate-900 uppercase text-xs focus:outline-none focus:border-blue-500" placeholder="Answer...">
+                        </div>
+                        <div>
+                            <p class="mb-1">4. I am where your spine is located. I am the exact opposite of the front. I am the direction you go when you retreat.</p>
+                            <input type="text" id="riddle-4" class="w-full px-3 py-1.5 border border-slate-300 rounded text-slate-900 uppercase text-xs focus:outline-none focus:border-blue-500" placeholder="Answer...">
+                        </div>
+                        <div>
+                            <p class="mb-1">5. I am an odd number. If you take away my first letter, I become a tall plant with branches and leaves.</p>
+                            <input type="text" id="riddle-5" class="w-full px-3 py-1.5 border border-slate-300 rounded text-slate-900 uppercase text-xs focus:outline-none focus:border-blue-500" placeholder="Answer...">
+                        </div>
+                    </div>
+                    <div class="mt-4 p-3 bg-slate-50 border border-slate-100 rounded text-sm text-slate-700 italic text-center">
+                        "Combine the 5 answers to reveal your decryption rule."
+                    </div>
+                </div>
+
+                <!-- Table & Questions Column -->
+                <div class="lg:col-span-2 flex flex-col gap-8">
+                    <!-- Decryption Table -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
+                                    <th class="px-6 py-4">Encrypted Data</th>
+                                    <th class="px-6 py-4 w-1/2">Your Decoded Try</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr>
+                                    <td class="px-6 py-5 font-mono text-slate-700 font-medium">L QHHG FDVK</td>
+                                    <td class="px-6 py-5">
+                                        <input type="text" id="s1-input" placeholder="Type decoded message..." 
+                                            class="w-full px-4 py-2 border border-slate-300 rounded-lg text-slate-900 uppercase focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+                                            autocomplete="off" spellcheck="false">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table class="w-full text-left border-collapse border-t border-slate-200">
+                            <thead>
+                                <tr class="bg-slate-50 border-b border-slate-200 text-sm font-medium text-slate-600">
+                                    <th class="px-6 py-4">Expected Hash</th>
+                                    <th class="px-6 py-4">Current Hash</th>
+                                    <th class="px-6 py-4 text-right">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="px-6 py-5 font-mono text-slate-500">5e884898</td>
+                                    <td class="px-6 py-5 font-mono text-slate-900" id="s1-current-hash">e3b0c442</td>
+                                    <td class="px-6 py-5 text-right">
+                                        <span id="s1-status" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-slate-100 text-slate-600">
+                                            Pending
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Reflection Questions -->
+                    <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                        <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Reflection Questions</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">1. The Avalanche Effect: You changed a single character. Explain why the resulting SHA-256 hash changed completely rather than just altering one character.</label>
+                                <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-1">2. One-Way Function: If a hacker intercepts the hash 5e884898..., why can they not reverse the math to figure out the original transaction data?</label>
+                                <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex justify-end">
+                        <button id="btn-next-1" class="hidden px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 transition-all">
+                            Continue to Keys &rarr;
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Keys -->
+        <div id="section-2" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Exercise 2: Public & Private Keys (Asymmetric Cryptography)</h2>
+                
+                <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 text-sm text-slate-700 space-y-5">
+                    <div>
+                        <h3 class="font-semibold text-slate-900 text-base mb-1">The Situation:</h3>
+                        <p>You are acting as a verification node on a blockchain network. Four different users are trying to send transactions across the network.</p>
+                        <p class="mt-2">To authorize a transaction, a sender must provide two things:</p>
+                        <ol class="list-decimal list-inside ml-2 mt-1 space-y-1">
+                            <li>Their <strong>Public Key</strong> (their known network address).</li>
+                            <li>Their <strong>Private Key Signature</strong> (their secret digital stamp).</li>
+                        </ol>
+                        <p class="mt-2">Below the main network log, you have been provided with a secure <strong>Key Registry</strong>—a database that shows which Private Key is mathematically paired to which Public Key.</p>
+                    </div>
+
+                    <div>
+                        <h3 class="font-semibold text-slate-900 text-base mb-1">Your Objective:</h3>
+                        <ol class="list-decimal list-inside ml-2 space-y-1">
+                            <li><strong>Automate the Verification:</strong> Simulate the spreadsheet formula by entering the submitted private keys. The system will automatically check if it matches the registry.</li>
+                            <li><strong>Diagnose the Network Failures:</strong> Only one of these transactions is completely valid. The other three contain critical security errors. Once the status flags the errors, look closely at the data submitted in that row. Figure out exactly <em>what</em> the sender did wrong, and type your explanation in the <strong>Network Analysis</strong> column.</li>
+                        </ol>
+                    </div>
+
+                    <div class="bg-blue-50 border border-blue-100 rounded-lg p-4">
+                        <h4 class="font-semibold text-blue-900 text-sm mb-1">💡 Formula Hint (For a Spreadsheet):</h4>
+                        <p class="text-blue-800 text-xs mt-1">To automate this in a real Google Sheet, you would use a VLOOKUP function in the Status column. Your syntax would look something like this:</p>
+                        <code class="block mt-2 bg-white border border-blue-200 p-2 rounded text-xs font-mono text-blue-900 break-all">
+                            =IF(VLOOKUP([Cell with Public Key], [Highlight Key Registry Range], 2, FALSE) = [Cell with Submitted Private Key], "Valid", "Forged/Error")
+                        </code>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 mb-8">
+                <!-- Network Table -->
+                <div class="lg:col-span-3 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden mb-8">
+                    <div class="bg-slate-50 border-b border-slate-200 px-6 py-3 text-sm font-semibold text-slate-700">
+                        The Network (Public Ledger Verification)
+                    </div>
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-slate-100 text-xs font-medium text-slate-500 uppercase">
+                                <th class="px-4 py-3">Sender</th>
+                                <th class="px-4 py-3">Public Key</th>
+                                <th class="px-4 py-3 w-1/4">Private Key (Input)</th>
+                                <th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3 w-1/3">Network Analysis</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100 text-sm">
+                            <tr>
+                                <td class="px-4 py-4 text-slate-800 font-medium">Sender 001</td>
+                                <td class="px-4 py-4 font-mono text-slate-600">PK-001</td>
+                                <td class="px-4 py-4"><input type="text" id="s2-p1" class="s2-input w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Paste Key..."></td>
+                                <td class="px-4 py-4"><span id="s2-st-1" class="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Pending</span></td>
+                                <td class="px-4 py-4"><input type="text" class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:border-blue-500" placeholder="Diagnose issue..."></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 text-slate-800 font-medium">Sender 002</td>
+                                <td class="px-4 py-4 font-mono text-slate-600">PK-002</td>
+                                <td class="px-4 py-4"><input type="text" id="s2-p2" class="s2-input w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Paste Key..."></td>
+                                <td class="px-4 py-4"><span id="s2-st-2" class="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Pending</span></td>
+                                <td class="px-4 py-4"><input type="text" class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:border-blue-500" placeholder="Diagnose issue..."></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 text-slate-800 font-medium">Sender 003</td>
+                                <td class="px-4 py-4 font-mono text-slate-600">PK-004</td>
+                                <td class="px-4 py-4"><input type="text" id="s2-p3" class="s2-input w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Paste Key..."></td>
+                                <td class="px-4 py-4"><span id="s2-st-3" class="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Pending</span></td>
+                                <td class="px-4 py-4"><input type="text" class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:border-blue-500" placeholder="Diagnose issue..."></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 text-slate-800 font-medium">Sender 005</td>
+                                <td class="px-4 py-4 font-mono text-slate-600">PK-00</td>
+                                <td class="px-4 py-4"><input type="text" id="s2-p4" class="s2-input w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" placeholder="Paste Key..."></td>
+                                <td class="px-4 py-4"><span id="s2-st-4" class="px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500">Pending</span></td>
+                                <td class="px-4 py-4"><input type="text" class="w-full px-2 py-1.5 border border-slate-300 rounded text-xs focus:outline-none focus:border-blue-500" placeholder="Diagnose issue..."></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Registry Table -->
+                <div class="lg:col-span-1 bg-white border border-slate-200 rounded-xl shadow-sm overflow-hidden h-fit">
+                    <div class="bg-slate-50 border-b border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700">
+                        Key Registry
+                    </div>
+                    <table class="w-full text-left border-collapse text-xs">
+                        <thead>
+                            <tr class="border-b border-slate-100 font-medium text-slate-500">
+                                <th class="px-4 py-2">Public</th>
+                                <th class="px-4 py-2">Private Key</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-slate-500">PK-001</td>
+                                <td class="px-4 py-2 font-mono text-slate-800 select-all">Priv-001</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-slate-500">PK-002</td>
+                                <td class="px-4 py-2 font-mono text-slate-800 select-all">Priv-002</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-slate-500">PK-003</td>
+                                <td class="px-4 py-2 font-mono text-slate-800 select-all">Priv-003</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-slate-500">PK-004</td>
+                                <td class="px-4 py-2 font-mono text-slate-800 select-all">Priv-004</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-2 font-mono text-slate-500">PK-005</td>
+                                <td class="px-4 py-2 font-mono text-slate-800 select-all">Priv-005</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Reflection Questions -->
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6 mb-8">
+                <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Reflection Questions</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">1. Key Compromise: If an attacker discovers your Private Key, explain exactly how they could drain your account, even if your Public Key is highly secured.</label>
+                        <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">2. Network Visibility: Why is it mathematically safe to broadcast your Public Key to thousands of strangers on the network?</label>
+                        <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-end">
+                <button id="btn-next-2" class="hidden px-8 py-3 bg-blue-600 text-white font-medium rounded-lg shadow-sm hover:bg-blue-700 transition-all">
+                    Continue to Blocks &rarr;
+                </button>
+            </div>
+        </div>
+
+        <!-- Section 3: Blocks -->
+        <div id="section-3" class="hidden fade-in">
+            <div class="mb-8">
+                <h2 class="text-2xl font-semibold text-slate-900 mb-2">Exercise 3: Blockchain Anatomy</h2>
+                <p class="text-slate-600">Link the blocks by copying each block's current hash to the next block's "Prev Hash" field.</p>
+            </div>
+
+            <!-- Block Container -->
+            <div class="flex flex-wrap gap-4 items-center justify-center mb-10" id="blocks-container">
+                <!-- Block 1 -->
+                <div class="w-56 bg-white border-2 border-slate-300 rounded-xl p-4 shadow-sm relative block-card" id="b1-card">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3">Block 1 (Genesis)</div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Data:</span>
+                            <input type="text" id="b1-data" value="$100" class="block-data w-full bg-slate-50 px-2 py-1.5 rounded border border-slate-200 focus:outline-none focus:border-blue-400" disabled>
+                        </div>
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Prev Hash:</span>
+                            <div class="bg-slate-100 px-2 py-1.5 rounded border border-slate-200 font-mono text-slate-400 text-xs">00000000</div>
+                        </div>
+                        <div>
+                            <span class="block text-slate-700 text-xs font-semibold mb-1">Current Hash:</span>
+                            <div id="b1-hash" class="bg-slate-50 px-2 py-1.5 rounded border border-slate-300 font-mono font-bold text-slate-800 text-xs select-all"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SVG Arrow -->
+                <svg class="w-6 h-6 text-slate-300 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+
+                <!-- Block 2 -->
+                <div class="w-56 bg-white border-2 border-slate-200 rounded-xl p-4 shadow-sm relative block-card transition-colors duration-300" id="b2-card">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3">Block 2</div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Data:</span>
+                            <input type="text" id="b2-data" value="$250" class="block-data w-full bg-white px-2 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all">
+                        </div>
+                        <div>
+                            <span class="block text-slate-700 text-xs font-medium mb-1">Prev Hash:</span>
+                            <input type="text" id="b2-prev" placeholder="Paste here..." class="block-prev w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <span class="block text-slate-500 text-xs font-semibold mb-1">Current Hash:</span>
+                            <div id="b2-hash" class="bg-slate-50 px-2 py-1.5 rounded border border-slate-200 font-mono font-bold text-slate-400 text-xs select-all transition-all">?????</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SVG Arrow -->
+                <svg class="w-6 h-6 text-slate-300 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+
+                <!-- Block 3 -->
+                <div class="w-56 bg-white border-2 border-slate-200 rounded-xl p-4 shadow-sm relative block-card transition-colors duration-300" id="b3-card">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3">Block 3</div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Data:</span>
+                            <input type="text" id="b3-data" value="$50" class="block-data w-full bg-white px-2 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all">
+                        </div>
+                        <div>
+                            <span class="block text-slate-700 text-xs font-medium mb-1">Prev Hash:</span>
+                            <input type="text" id="b3-prev" placeholder="Paste here..." class="block-prev w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <span class="block text-slate-500 text-xs font-semibold mb-1">Current Hash:</span>
+                            <div id="b3-hash" class="bg-slate-50 px-2 py-1.5 rounded border border-slate-200 font-mono font-bold text-slate-400 text-xs select-all transition-all">?????</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- SVG Arrow -->
+                <svg class="w-6 h-6 text-slate-300 hidden xl:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+
+                <!-- Block 4 -->
+                <div class="w-56 bg-white border-2 border-slate-200 rounded-xl p-4 shadow-sm relative block-card transition-colors duration-300" id="b4-card">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3">Block 4</div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Data:</span>
+                            <input type="text" id="b4-data" value="$900" class="block-data w-full bg-white px-2 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all">
+                        </div>
+                        <div>
+                            <span class="block text-slate-700 text-xs font-medium mb-1">Prev Hash:</span>
+                            <input type="text" id="b4-prev" placeholder="Paste here..." class="block-prev w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <span class="block text-slate-500 text-xs font-semibold mb-1">Current Hash:</span>
+                            <div id="b4-hash" class="bg-slate-50 px-2 py-1.5 rounded border border-slate-200 font-mono font-bold text-slate-400 text-xs select-all transition-all">?????</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SVG Arrow -->
+                <svg class="w-6 h-6 text-slate-300 hidden md:block" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" /></svg>
+
+                <!-- Block 5 -->
+                <div class="w-56 bg-white border-2 border-slate-200 rounded-xl p-4 shadow-sm relative block-card transition-colors duration-300" id="b5-card">
+                    <div class="text-xs font-bold text-slate-400 uppercase mb-3">Block 5</div>
+                    <div class="space-y-3 text-sm">
+                        <div>
+                            <span class="block text-slate-500 text-xs mb-1">Data:</span>
+                            <input type="text" id="b5-data" value="$15" class="block-data w-full bg-white px-2 py-1.5 rounded border border-slate-300 focus:outline-none focus:border-blue-400 focus:ring-1 focus:ring-blue-400 transition-all">
+                        </div>
+                        <div>
+                            <span class="block text-slate-700 text-xs font-medium mb-1">Prev Hash:</span>
+                            <input type="text" id="b5-prev" placeholder="Paste here..." class="block-prev w-full px-2 py-1.5 border border-slate-300 rounded font-mono text-xs focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <span class="block text-slate-500 text-xs font-semibold mb-1">Current Hash:</span>
+                            <div id="b5-hash" class="bg-slate-50 px-2 py-1.5 rounded border border-slate-200 font-mono font-bold text-slate-400 text-xs select-all transition-all">?????</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Success Prompts & Banners -->
+            <div id="t3-prompt" class="hidden max-w-lg mx-auto bg-blue-50 border border-blue-200 rounded-xl p-6 text-center shadow-sm fade-in mb-8">
+                <h3 class="text-lg font-semibold text-blue-900 mb-2">✨ Chain Valid!</h3>
+                <p class="text-blue-700 text-sm">You have successfully linked all 5 blocks. <strong>Now, change Block 2's data to "$10000"</strong> to see the chain react.</p>
+            </div>
+
+            <div id="t3-broken" class="hidden max-w-lg mx-auto bg-red-50 border border-red-200 rounded-xl p-6 text-center shadow-sm fade-in mb-8">
+                <h3 class="text-lg font-semibold text-red-900 mb-2">⚠️ Chain Broken!</h3>
+                <p class="text-red-700 text-sm">The Avalanche Effect changed Block 2's hash, causing a mismatch with Block 3. To fix this, you would have to manually recalculate every subsequent block.</p>
+            </div>
+
+            <!-- Reflection Questions -->
+            <div class="bg-white border border-slate-200 rounded-xl shadow-sm p-6">
+                <h3 class="text-sm font-semibold text-slate-800 uppercase tracking-wider mb-4 border-b border-slate-100 pb-2">Reflection Questions</h3>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">1. The Cost of Tampering: When you altered the data in Block 2, how many subsequent blocks became immediately invalid?</label>
+                        <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="2" placeholder="Your answer..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">2. Computational Impossibility: If a real network generates a block every 10 mins and you tamper with a block from 3 years ago, why could your computer never recalculate the chain fast enough?</label>
+                        <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 mb-1">3. Immutability: Based on your attempt to forge the chain, define "Immutability" in your own words.</label>
+                        <textarea class="w-full px-3 py-2 border border-slate-300 rounded text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500" rows="3" placeholder="Your answer..."></textarea>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- State Management ---
+            let currentStep = 1;
+            let unlockedSteps = [1];
+
+            // --- Elements: Navigation ---
+            const tab1 = document.getElementById('nav-tab-1');
+            const tab2 = document.getElementById('nav-tab-2');
+            const tab3 = document.getElementById('nav-tab-3');
+            const sections = {
+                1: document.getElementById('section-1'),
+                2: document.getElementById('section-2'),
+                3: document.getElementById('section-3')
+            };
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            // --- Navigation Logic ---
+            function switchTab(step) {
+                if (!unlockedSteps.includes(step)) return;
+                
+                currentStep = step;
+                
+                // Update Progress UI
+                progressBar.className = `h-full bg-slate-400 rounded-full transition-all duration-500 w-${step}/3`;
+                progressText.textContent = `Exercise ${step} of 3`;
+
+                // Hide all, remove active styling
+                Object.values(sections).forEach(sec => sec.classList.add('hidden'));
+                [tab1, tab2, tab3].forEach(t => {
+                    t.classList.remove('text-blue-600', 'border-blue-600', 'bg-blue-50/50');
+                    if (unlockedSteps.includes(parseInt(t.id.slice(-1)))) {
+                        t.classList.add('text-slate-600', 'hover:text-slate-800');
+                    }
+                });
+
+                // Show selected, add active styling
+                sections[step].classList.remove('hidden');
+                const activeTab = document.getElementById(`nav-tab-${step}`);
+                activeTab.classList.remove('text-slate-600', 'hover:text-slate-800');
+                activeTab.classList.add('text-blue-600', 'border-blue-600', 'bg-blue-50/50');
+            }
+
+            function unlockTab(step) {
+                if (!unlockedSteps.includes(step)) {
+                    unlockedSteps.push(step);
+                    const tab = document.getElementById(`nav-tab-${step}`);
+                    tab.removeAttribute('disabled');
+                    tab.classList.remove('cursor-not-allowed', 'text-slate-400');
+                    tab.classList.add('text-slate-600', 'hover:text-slate-800', 'hover:border-slate-300', 'cursor-pointer');
+                    tab.innerHTML = tab.innerHTML.replace('<span class="ml-1 text-xs opacity-50">🔒</span>', '');
+                    tab.addEventListener('click', () => switchTab(step));
+                }
+            }
+
+            tab1.addEventListener('click', () => switchTab(1));
+
+            // --- Logic Section 1: Riddles & Hashing ---
+            // Riddles Feedback (visual only)
+            const riddles = [
+                { id: 'riddle-1', ans: 'SHIFT' },
+                { id: 'riddle-2', ans: 'EACH' },
+                { id: 'riddle-3', ans: 'LETTER' },
+                { id: 'riddle-4', ans: 'BACK' },
+                { id: 'riddle-5', ans: 'THREE' }
+            ];
+            riddles.forEach(r => {
+                const el = document.getElementById(r.id);
+                el.addEventListener('input', (e) => {
+                    if (e.target.value.trim().toUpperCase() === r.ans) {
+                        el.classList.add('border-green-500', 'bg-green-50', 'text-green-700');
+                        el.classList.remove('border-slate-300');
+                    } else {
+                        el.classList.remove('border-green-500', 'bg-green-50', 'text-green-700');
+                        el.classList.add('border-slate-300');
+                    }
+                });
+            });
+
+            const s1Input = document.getElementById('s1-input');
+            const s1Hash = document.getElementById('s1-current-hash');
+            const s1Status = document.getElementById('s1-status');
+            const btnNext1 = document.getElementById('btn-next-1');
+            const expectedHash1 = '5e884898';
+
+            function generateMockHash(str) {
+                let normalized = str.trim().toUpperCase();
+                if (normalized === '') return 'e3b0c442';
+                let hash = 0;
+                for (let i = 0; i < normalized.length; i++) {
+                    hash = ((hash << 5) - hash) + normalized.charCodeAt(i);
+                    hash |= 0;
+                }
+                let hexStr = Math.abs(hash).toString(16);
+                while(hexStr.length < 8) hexStr = '0' + hexStr;
+                return hexStr.substring(0, 8);
+            }
+
+            s1Input.addEventListener('input', (e) => {
+                const val = e.target.value.trim().toUpperCase();
+                if (val === 'I NEED CASH') {
+                    s1Hash.textContent = expectedHash1;
+                    s1Status.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700";
+                    s1Status.textContent = "Valid";
+                    btnNext1.classList.remove('hidden');
+                    unlockTab(2);
+                } else {
+                    s1Hash.textContent = generateMockHash(val);
+                    s1Status.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-700";
+                    s1Status.textContent = "Tampered";
+                    btnNext1.classList.add('hidden');
+                }
+            });
+
+            btnNext1.addEventListener('click', () => switchTab(2));
+
+
+            // --- Logic Section 2: Keys ---
+            const s2Inputs = [
+                document.getElementById('s2-p1'),
+                document.getElementById('s2-p2'),
+                document.getElementById('s2-p3'),
+                document.getElementById('s2-p4')
+            ];
+            const s2Statuses = [
+                document.getElementById('s2-st-1'),
+                document.getElementById('s2-st-2'),
+                document.getElementById('s2-st-3'),
+                document.getElementById('s2-st-4')
+            ];
+            const btnNext2 = document.getElementById('btn-next-2');
+
+            function checkTab2Completion() {
+                // Check if all rows are evaluated to a final state (not pending and not empty)
+                const allDone = s2Statuses.every(st => st.textContent !== 'Pending' && st.textContent !== '...');
+                if (allDone) {
+                    btnNext2.classList.remove('hidden');
+                    unlockTab(3);
+                } else {
+                    btnNext2.classList.add('hidden');
+                }
+            }
+
+            function setStatus(index, type, text) {
+                const st = s2Statuses[index];
+                st.textContent = text;
+                if (type === 'valid') {
+                    st.className = "px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700";
+                } else if (type === 'forged') {
+                    st.className = "px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-700";
+                } else if (type === 'error') {
+                    st.className = "px-2 py-1 rounded-full text-xs font-medium bg-orange-100 text-orange-700";
+                } else {
+                    st.className = "px-2 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-500";
+                }
+            }
+
+            s2Inputs.forEach((input, idx) => {
+                input.addEventListener('input', (e) => {
+                    const val = e.target.value.trim();
+                    if (val === '') {
+                        setStatus(idx, 'pending', 'Pending');
+                        checkTab2Completion();
+                        return;
+                    }
+                    
+                    if (idx === 0) {
+                        // Scenario 1: Baseline. Expects Priv-001
+                        if (val === 'Priv-001') setStatus(idx, 'valid', 'Valid');
+                        else setStatus(idx, 'forged', 'Forged');
+                    } else if (idx === 1) {
+                        // Scenario 2: Spoof. Using someone else's key for PK-002
+                        if (val === 'Priv-001') setStatus(idx, 'forged', 'Forged');
+                        else setStatus(idx, 'forged', 'Forged'); // Really any mismatch is forged
+                    } else if (idx === 2) {
+                        // Scenario 3: Impersonator. Sender 3 using PK-004 but their own key
+                        if (val === 'Priv-003') setStatus(idx, 'forged', 'Forged');
+                        else setStatus(idx, 'forged', 'Forged');
+                    } else if (idx === 3) {
+                        // Scenario 4: Typo in PK. 
+                        if (val === 'Priv-005') setStatus(idx, 'error', 'Error / Not Found');
+                        else setStatus(idx, 'error', 'Error / Not Found');
+                    }
+                    
+                    checkTab2Completion();
+                });
+            });
+
+            btnNext2.addEventListener('click', () => switchTab(3));
+
+            // --- Logic Section 3: Blocks ---
+            const blocksData = [
+                { id: 1, dataEl: document.getElementById('b1-data'), prevHash: '00000000', hashEl: document.getElementById('b1-hash'), card: document.getElementById('b1-card') },
+                { id: 2, dataEl: document.getElementById('b2-data'), prevEl: document.getElementById('b2-prev'), hashEl: document.getElementById('b2-hash'), card: document.getElementById('b2-card') },
+                { id: 3, dataEl: document.getElementById('b3-data'), prevEl: document.getElementById('b3-prev'), hashEl: document.getElementById('b3-hash'), card: document.getElementById('b3-card') },
+                { id: 4, dataEl: document.getElementById('b4-data'), prevEl: document.getElementById('b4-prev'), hashEl: document.getElementById('b4-hash'), card: document.getElementById('b4-card') },
+                { id: 5, dataEl: document.getElementById('b5-data'), prevEl: document.getElementById('b5-prev'), hashEl: document.getElementById('b5-hash'), card: document.getElementById('b5-card') }
+            ];
+            
+            const promptEl = document.getElementById('t3-prompt');
+            const brokenEl = document.getElementById('t3-broken');
+            let chainFullyLinkedOnce = false;
+
+            function calculateBlockHash(dataStr, prevHashStr) {
+                // simple predictable hash for simulation
+                const combined = (dataStr + prevHashStr).replace(/\s/g, '').toLowerCase();
+                let hash = 0;
+                for (let i = 0; i < combined.length; i++) {
+                    hash = ((hash << 5) - hash) + combined.charCodeAt(i);
+                    hash |= 0;
+                }
+                let hexStr = Math.abs(hash).toString(16);
+                while(hexStr.length < 8) hexStr = '0' + hexStr;
+                return hexStr.substring(0, 8);
+            }
+
+            // Initialize Block 1
+            blocksData[0].hashEl.textContent = calculateBlockHash(blocksData[0].dataEl.value, blocksData[0].prevHash);
+            blocksData[0].card.classList.add('border-green-400');
+            
+            function validateChain() {
+                let allValid = true;
+                let brokenAt = -1;
+
+                // Update Block 1 hash if its data changed (it shouldn't, it's disabled, but just in case)
+                blocksData[0].hashEl.textContent = calculateBlockHash(blocksData[0].dataEl.value, blocksData[0].prevHash);
+
+                for (let i = 1; i < blocksData.length; i++) {
+                    const currentBlock = blocksData[i];
+                    const prevBlock = blocksData[i-1];
+                    const expectedPrevHash = prevBlock.hashEl.textContent;
+                    const enteredPrevHash = currentBlock.prevEl.value.trim().toLowerCase();
+
+                    if (enteredPrevHash === expectedPrevHash) {
+                        // Link is good
+                        currentBlock.card.classList.remove('border-slate-200', 'border-red-400');
+                        currentBlock.card.classList.add('border-green-400');
+                        currentBlock.prevEl.classList.remove('border-red-400');
+                        currentBlock.prevEl.classList.add('border-green-400');
+                        
+                        // Generate current hash
+                        const newHash = calculateBlockHash(currentBlock.dataEl.value, expectedPrevHash);
+                        currentBlock.hashEl.textContent = newHash;
+                        currentBlock.hashEl.classList.add('text-slate-800');
+                        currentBlock.hashEl.classList.remove('text-slate-400');
+                    } else {
+                        // Link is broken or pending
+                        allValid = false;
+                        if (enteredPrevHash !== '') {
+                            brokenAt = i;
+                            currentBlock.card.classList.remove('border-slate-200', 'border-green-400');
+                            currentBlock.card.classList.add('border-red-400');
+                            currentBlock.prevEl.classList.add('border-red-400');
+                            currentBlock.prevEl.classList.remove('border-green-400');
+                        } else {
+                            currentBlock.card.classList.remove('border-green-400', 'border-red-400');
+                            currentBlock.card.classList.add('border-slate-200');
+                            currentBlock.prevEl.classList.remove('border-red-400', 'border-green-400');
+                        }
+                        
+                        currentBlock.hashEl.textContent = '?????';
+                        currentBlock.hashEl.classList.add('text-slate-400');
+                        currentBlock.hashEl.classList.remove('text-slate-800');
+                    }
+                }
+
+                if (allValid && !chainFullyLinkedOnce) {
+                    chainFullyLinkedOnce = true;
+                    promptEl.classList.remove('hidden');
+                }
+
+                if (chainFullyLinkedOnce) {
+                    if (brokenAt > -1) {
+                        brokenEl.classList.remove('hidden');
+                        promptEl.classList.add('hidden');
+                    } else if (allValid) {
+                        brokenEl.classList.add('hidden');
+                        promptEl.classList.remove('hidden');
+                        
+                        // If they changed the data as instructed and fixed everything
+                        if (blocksData[1].dataEl.value === '$10000') {
+                            promptEl.innerHTML = `<h3 class="text-lg font-semibold text-green-900 mb-2">🎉 Network Restored!</h3><p class="text-green-700 text-sm">You manually re-forged the chain. Imagine doing this for millions of blocks while new ones are added every 10 minutes!</p>`;
+                            promptEl.classList.replace('bg-blue-50', 'bg-green-50');
+                            promptEl.classList.replace('border-blue-200', 'border-green-200');
+                        }
+                    }
+                }
+            }
+
+            // Attach listeners to all block inputs
+            for (let i = 1; i < blocksData.length; i++) {
+                blocksData[i].dataEl.addEventListener('input', validateChain);
+                blocksData[i].prevEl.addEventListener('input', validateChain);
+            }
+
+        });
+    </script>
+</body>
+</html>
